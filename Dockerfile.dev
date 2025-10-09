@@ -18,6 +18,21 @@ RUN chown -R node:node /home/node
   
 USER node
 
-COPY package.json ./
-RUN npm install
+# COPY package.json ./
+# RUN npm install
 
+#apenas documentativo, não faz bind da porta - boa prática documentar portas para deixar mais claro todas as portas que a aplicação utiliza
+EXPOSE 3000 
+
+#CMD especifica o comando que será executado quando o container iniciar, mas pode ser sobrescrito no docker run a qqr momento
+#Entrypoint comando fixo que nunca será sobrescrito
+#Entrypoint pode ser colocado como uma preparação antes de executar o CMD
+
+#em desenvolvimento usamos do CMD para manter o container de pé e ainda aceitar outros comandos via docker run
+
+#CMD [ "tail", "-f", "/dev/null" ]
+
+#shell script executa dois comandos, primeiro instala as dependências e depois mantém o container de pé
+COPY start.sh /
+RUN chmod +x /start.sh
+CMD ['/start.sh']
