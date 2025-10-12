@@ -1,0 +1,7 @@
+services:
+  db:
+    ports:
+      - 33060:3306
+    volumes:
+      - ./.docker/mysql/dbdata:/var/lib/mysql
+# vai funcionar por padrão, sem necessidade do -f quando tiver um docker-compose.yaml declarado na raiz
