@@ -1,0 +1,42 @@
+FROM node:22.8.0-slim
+
+ARG NODEMON_VERSION=3.1.7
+
+RUN apt update && \
+  apt install -y curl && \
+  npm install -g nodemon@${NODEMON_VERSION}
+
+WORKDIR /home/node/app
+
+RUN chown -R node:node /home/node
+
+# debian  
+# RUN useradd -m -u 1000 admin - criar um usuario
+# RUN usermod -u 1000 admin - muda o id de um usuário
+
+# alpine  
+# RUN adduser -D -u 1000 admin
+# RUN sed -i 's/1000/1001/g' /etc/passwd
+
+COPY start.sh /
+RUN chmod +x /start.sh
+
+USER node
+
+# COPY package.json ./
+# RUN npm install
+
+#apenas documentativo, não faz bind da porta - boa prática documentar portas para deixar mais claro todas as portas que a aplicação utiliza
+EXPOSE 3000 
+
+#CMD especifica o comando que será executado quando o container iniciar, mas pode ser sobrescrito no docker run a qqr momento
+#Entrypoint comando fixo que nunca será sobrescrito
+#Entrypoint pode ser colocado como uma preparação antes de executar o CMD
+
+#em desenvolvimento usamos do CMD para manter o container de pé e ainda aceitar outros comandos via docker run
+
+#CMD [ "tail", "-f", "/dev/null" ]
+
+#shell script executa dois comandos, primeiro instala as dependências e depois mantém o container de pé
+
+CMD ["/start.sh"]
